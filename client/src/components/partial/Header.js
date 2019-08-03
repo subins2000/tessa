@@ -3,6 +3,7 @@ import {
     Link,
 } from 'react-router-dom';
 
+import web3Obj from '../../helper';
 import { isLoggedIn, userStore } from '../../store.js';
 
 
@@ -12,6 +13,17 @@ class Header extends Component {
         super(props);
 
         this.logOut = this.logOut.bind(this);
+    }
+
+    enableTorus = () => {
+        window.ethereum.enable().then(accounts => {
+          window.sessionStorage.setItem('pageUsingTorus', 'true')
+
+          userStore.dispatch({
+            type: 'USER_SET_INFO',
+            account: accounts[0]
+          });
+        });
     }
 
     logOut() {
@@ -35,7 +47,7 @@ class Header extends Component {
     guestUserButtons() {
         return (
             <span>
-                <Link className="btn btn-light" to="/login">Log In</Link>&nbsp;
+                <Link onClick={this.enableTorus} className="btn btn-primary" to="#">Log In</Link>&nbsp;
                 <Link className="btn btn-light" to="/register">Register</Link>
             </span>
         );

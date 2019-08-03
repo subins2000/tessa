@@ -9,17 +9,17 @@ import 'toastr/build/toastr.min.css';
 
 
 class Login extends Component {
+
+    state = {
+        account: ''
+    }
+
     constructor(props){
         super(props);
 
         if (isLoggedIn()) {
             this.props.history.push('/');
         }
-
-        this.state = {
-            inputUsername: '',
-            inputPassword: '',
-        };
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -69,17 +69,8 @@ class Login extends Component {
                 <Header/>
                 <div className="container" id="content">
                     <h1>Login</h1>
-                    <form onSubmit={this.handleFormSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="inputUsername">Username</label>
-                            <input type="text" className="form-control" id="inputUsername" placeholder="Enter username" value={this.state.inputUsername} onChange={this.handleInputChange} />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="inputPassword">Password</label>
-                            <input type="password" className="form-control" id="inputPassword" placeholder="Enter password" value={this.state.inputPassword} onChange={this.handleInputChange} />
-                        </div>
-                        <button className="btn btn-primary">Login</button>
-                    </form>
+                    <p>Login to add torrents</p>
+                    <button onClick={this.enableTorus} type="submit" className="btn btn-primary icon">Login With Torus</button>
                 </div>
             </div>
         );

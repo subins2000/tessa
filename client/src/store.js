@@ -1,11 +1,7 @@
 import { createStore } from 'redux';
 
 const initialUser = localStorage.getItem('userState') ? JSON.parse(localStorage.getItem('userState')) : {
-    authToken: null,
-    books: {},
-    loggedIn: false,
-    name: null,
-    username: null,
+    account: null
 };
 
 export const USER_SET_INFO = {type: 'USER_SET_INFO'};
@@ -14,13 +10,10 @@ export const USER_LOG_OUT = {type: 'USER_LOG_OUT'};
 
 function userReducer(state = initialUser, action) {
     switch(action.type) {
-        case 'USER_SET_INFO':
+        case 'USER_SET_ACCOUNT':
             return {
                 ...state,
-                authToken: action.authToken,
-                loggedIn: true,
-                name: action.name,
-                username: action.username,
+                account: action.account
             };
 
         case 'USER_SET_BOOKS':
@@ -34,11 +27,7 @@ function userReducer(state = initialUser, action) {
 
             return {
                 ...state,
-                authToken: null,
-                books: {},
-                loggedIn: false,
-                name: null,
-                username: null,
+                account: null
             };
 
         default:
@@ -49,7 +38,7 @@ function userReducer(state = initialUser, action) {
 export const userStore = createStore(userReducer, initialUser);
 
 export function isLoggedIn() {
-    return userStore.getState()['loggedIn'];
+    return userStore.getState()['account'] !== null;
 }
 
 export default userStore;
