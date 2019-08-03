@@ -1,5 +1,7 @@
+const crypto = require('crypto');
 const IPFS = require('ipfs')
 const OrbitDB = require('orbit-db')
+
 // OrbitDB uses Pubsub which is an experimental feature
 // and need to be turned on manually.
 // Note that these options need to be passed to IPFS in
@@ -28,17 +30,30 @@ ipfs.on('ready', async () => {
 
   const express = require('express')
   const app = express()
-  const port = 3000
+  const port = 4000
 
   app.get('/', function(req, res) {
     res.send('Hello from Tessa !')
   });
 
   app.get('/add', async function(req, res) {
+    var magnet = req.query.magnet;
+    var keywords = req.query.keywords;
+
+    if (
+      (typeof magnet == 'undefined' || typeof keywords == 'undefined') ||
+      (magnet == '' || keywords == '')
+    ) {
+      res.status(400);
+      res.send('bad request')
+    }
+
+    var magnet_hash = crypto.createHash('sha256').update(magnet).digest('base64');
+
     const hash = await db.put({
-      '_id': 'ss3',
+      '_id': magnet_hash,
       'm': 'wmd',
-      'k': ['movies', 'series']
+      'k': keywords.split(' ')
     });
     res.send(hash);
   });
@@ -61,5 +76,27 @@ ipfs.on('ready', async () => {
     res.send(results)
   });
 
-  app.listen(port, () => console.log(`Web sever listening on port ${port}!`))
+  app.listen(port, () => console.log(`Web sever listening on port ${port}!`));
+
+  const query = async () => {
+    const index = Math.floor(Math.random() * creatures.length)
+    const userId = Math.floor(Math.random() * 900 + 100)
+
+    try {
+      await db.add({ avatar: creatures[index], userId: userId })
+      const latest = db.iterator({ limit: 5 }).collect()
+      let output = ``
+      output += `[Latest Visitors]\n`
+      output += `--------------------\n`
+      output += `ID  | Visitor\n`
+      output += `--------------------\n`
+      output += latest.reverse().map((e) => e.payload.value.userId + ' | ' + e.payload.value.avatar).join('\n') + `\n`
+      console.log(output)
+    } catch (e) {
+      console.error(e)
+      process.exit(1)
+    }
+  }
+
+setInterval(query, 1000)
 });
