@@ -1,2 +1,4 @@
 .ethereum
 .ipfs
+node_modules
+orbitdb
