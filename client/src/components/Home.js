@@ -112,12 +112,12 @@ class Home extends Component {
                     <div className="col-8">
                         <div className="card">
                             <div className="card-header">
-                                BeX
+                                Tessa
                             </div>
                             <div className="card-body">
                                 <form className="form-group row" ref={this.bookSearchForm} onSubmit={this.onBookSearchFormSubmit}>
                                     <div className="col-10">
-                                        <input type="text" className="form-control" id="bookQuery" name="bookQuery" placeholder="Search for books" />
+                                        <input type="text" className="form-control" id="bookQuery" name="q" placeholder="Search for torrents" />
                                     </div>
                                     <div className="col-2">
                                         <button type="submit" className="btn btn-primary icon">
@@ -131,10 +131,10 @@ class Home extends Component {
                         <p></p>
                         <div className="card">
                             <div className="card-header">
-                                <span>My Books</span>&nbsp;
-                                <Link to="/addbook" className="btn btn-primary btn-sm icon">
+                                <span>My Torrents</span>&nbsp;
+                                <Link to="/addtorrent" className="btn btn-primary btn-sm icon">
                                     <i className="material-icons">library_add</i>
-                                    <span>Add Book</span>
+                                    <span>Add Torrent</span>
                                 </Link>
                             </div>
                             <div className="card-body">

@@ -29,7 +29,9 @@ ipfs.on('ready', async () => {
   })
 
   const express = require('express')
+  var cors = require('cors')
   const app = express()
+  app.use(cors())
   const port = 4000
 
   app.get('/', function(req, res) {
@@ -43,8 +45,8 @@ ipfs.on('ready', async () => {
     var keywords = req.query.keywords;
 
     if (
-      (typeof magnet == 'undefined' || typeof keywords == 'undefined') ||
-      (magnet == '' || keywords == '')
+      (typeof magnet == 'undefined' || typeof keywords == 'undefined' || typeof author == '') ||
+      (magnet == '' || keywords == '' || author == '')
     ) {
       res.status(400);
       res.send('bad request')
@@ -54,10 +56,10 @@ ipfs.on('ready', async () => {
 
     const hash = await db.put({
       '_id': magnet_hash,
-      'name': name,
+      'n': name,
       'm': magnet,
       'k': keywords.split(' '),
-      'author': author
+      'a': author
     });
     res.send(hash);
   });
@@ -71,7 +73,7 @@ ipfs.on('ready', async () => {
     q_keywords = req.query.q.split(' ');
     const results = db.query(function(item) {
       for (var k in q_keywords) {
-        if (item.k.indexOf(q_keywords[k]) !== -1) {
+        if (item.k.indexOf(q_keywords[k].toLowerCase()) !== -1) {
           return true;
         }
       }

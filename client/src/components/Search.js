@@ -68,9 +68,9 @@ class Search extends Component {
                     <div className="card" key={i}>
                         <div className="card-body">
                             <h5 className="card-title">
-                                <Link to={url}>{torrents[i].title}</Link>
+                                <Link to={url}>{torrents[i].n}</Link>
                             </h5>
-                            <h6 className="card-subtitle mb-2 text-muted">{torrents[i].author}</h6>
+                            <h6 className="card-subtitle mb-2 text-muted">{torrents[i].a}</h6>
                         </div>
                     </div>
                 );
@@ -79,6 +79,7 @@ class Search extends Component {
             $this.setState({
                 results: bookList,
             })
+            console.log(bookList)
         }).catch(function(error) {
             console.log(error);
         });

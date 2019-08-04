@@ -15,15 +15,23 @@ class Header extends Component {
         this.logOut = this.logOut.bind(this);
     }
 
-    enableTorus = () => {
-        window.ethereum.enable().then(accounts => {
-          window.sessionStorage.setItem('pageUsingTorus', 'true')
+    setStateInfo = () => {
+        web3Obj.web3.eth.getAccounts().then(accounts => {
+            console.log(accounts);
+            userStore.dispatch({
+                type: 'USER_SET_INFO',
+                account: accounts[0]
+            });
+        })
+    }
 
-          userStore.dispatch({
-            type: 'USER_SET_INFO',
-            account: accounts[0]
-          });
-        });
+    enableTorus = async () => {
+        try {
+            await web3Obj.initialize()
+            this.setStateInfo()
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     logOut() {
@@ -33,8 +41,8 @@ class Header extends Component {
     }
 
     userButtons() {
-        var name = userStore.getState()['name'];
-        var profileLink = '/u/' + userStore.getState()['username'];
+        var name = sessionStorage.getItem('selectedAddress');
+        var profileLink = '/u/' + name;
 
         return (
             <div className="dropdown">
@@ -48,7 +56,6 @@ class Header extends Component {
         return (
             <span>
                 <Link onClick={this.enableTorus} className="btn btn-primary" to="#">Log In</Link>&nbsp;
-                <Link className="btn btn-light" to="/register">Register</Link>
             </span>
         );
     }

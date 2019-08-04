@@ -10,10 +10,13 @@ export const USER_LOG_OUT = {type: 'USER_LOG_OUT'};
 
 function userReducer(state = initialUser, action) {
     switch(action.type) {
-        case 'USER_SET_ACCOUNT':
+        case 'USER_SET_INFO':
+            localStorage.setItem('account', action.account);
             return {
                 ...state,
-                account: action.account
+                account: action.account,
+                name: action.name,
+                books: []
             };
 
         case 'USER_SET_BOOKS':
@@ -27,7 +30,8 @@ function userReducer(state = initialUser, action) {
 
             return {
                 ...state,
-                account: null
+                account: null,
+                books: []
             };
 
         default:
@@ -38,7 +42,7 @@ function userReducer(state = initialUser, action) {
 export const userStore = createStore(userReducer, initialUser);
 
 export function isLoggedIn() {
-    return userStore.getState()['account'] !== null;
+    return sessionStorage.getItem('selectedAddress') !== null;
 }
 
 export default userStore;
