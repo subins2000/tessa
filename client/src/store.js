@@ -27,6 +27,7 @@ function userReducer(state = initialUser, action) {
 
         case 'USER_LOG_OUT':
             localStorage.removeItem('userState');
+            sessionStorage.removeItem('selectedAddress')
 
             return {
                 ...state,

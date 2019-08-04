@@ -17,7 +17,6 @@ class Header extends Component {
 
     setStateInfo = () => {
         web3Obj.web3.eth.getAccounts().then(accounts => {
-            console.log(accounts);
             userStore.dispatch({
                 type: 'USER_SET_INFO',
                 account: accounts[0]
