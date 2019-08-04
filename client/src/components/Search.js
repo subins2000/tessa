@@ -4,6 +4,7 @@ import {
     Link,
 } from 'react-router-dom';
 
+import * as constants from '../constants';
 import Header from './partial/Header.js';
 
 
@@ -16,17 +17,14 @@ class Search extends Component {
         this.queryParams = qs.parse(window.location.search);
 
         this.state = {
-            authorQuery: this.queryParams['authorQuery'],
-            bookQuery: this.queryParams['bookQuery'],
-            branch: this.queryParams['branch'],
-            results: [],
-            semester: this.queryParams['semester'],
+            q: this.queryParams['q'],
+            results: []
         };
 
-        this.bookSearchForm = React.createRef();
+        this.torrentsearchForm = React.createRef();
 
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.onBookSearchFormSubmit = this.onBookSearchFormSubmit.bind(this);
+        this.ontorrentsearchFormSubmit = this.ontorrentsearchFormSubmit.bind(this);
         this.search = this.search.bind(this);
         this.updateURLAndSearch = this.updateURLAndSearch.bind(this);
 
@@ -42,12 +40,12 @@ class Search extends Component {
     }
 
     updateURLAndSearch() {
-        var queryString = new URLSearchParams(new FormData(this.bookSearchForm['current'])).toString();
+        var queryString = new URLSearchParams(new FormData(this.torrentsearchForm['current'])).toString();
         this.props.history.push('/search?' + queryString);
         this.search();
     }
 
-    onBookSearchFormSubmit(e) {
+    ontorrentsearchFormSubmit(e) {
         e.preventDefault();
         this.updateURLAndSearch();
     }
@@ -55,28 +53,24 @@ class Search extends Component {
     search() {
         var $this = this;
 
-        axios.get('/api/books/search', {
+        axios.get(constants.NODE + '/search', {
             params: {
-                authorQuery: this.state.authorQuery,
-                bookQuery: this.state.bookQuery,
-                branch: this.state.branch,
-                semester: this.state.semester,
+                q: this.state.q
             }
         }).then(function(response) {
-            var books = response.data,
+            var torrents = response.data,
                 bookList = [],
                 url = '';
 
-            for (var i = 0;i < books.length;i++) {
-                url = '/book/' + books[i].slug;
+            for (var i = 0;i < torrents.length;i++) {
+                url = '/torrent/' + torrents[i].slug;
                 bookList.push(
                     <div className="card" key={i}>
-                        <img className="card-img-top" src={books[i].photo} alt="" />
                         <div className="card-body">
                             <h5 className="card-title">
-                                <Link to={url}>{books[i].title}</Link>
+                                <Link to={url}>{torrents[i].title}</Link>
                             </h5>
-                            <h6 className="card-subtitle mb-2 text-muted">{books[i].author}</h6>
+                            <h6 className="card-subtitle mb-2 text-muted">{torrents[i].author}</h6>
                         </div>
                     </div>
                 );
@@ -91,20 +85,6 @@ class Search extends Component {
     }
 
     render() {
-        var branches = {
-            'civil': 'Civil Engineering',
-            'cse': 'Computer Science Engineering',
-            'ec': 'Electronics & Communication Engineering',
-            'eee': 'Electrical & Electronics Engineering',
-            'mech': 'Mechanical Engineering',
-            'pe': 'Production Engineering'
-        };
-        var branchOptions = [];
-
-        for (var key in branches) {
-            branchOptions.push(<option value={key} key={key}>{branches[key]}</option>);
-        }
-
         return (
             <div>
                 <Header/>
@@ -114,35 +94,16 @@ class Search extends Component {
                             Search
                         </div>
                         <div className="card-body">
-                            <form className="form-group" ref={this.bookSearchForm} onSubmit={this.onBookSearchFormSubmit}>
+                            <form className="form-group" ref={this.torrentsearchForm} onSubmit={this.ontorrentsearchFormSubmit}>
                                 <div className="row">
                                     <div className="col-10">
-                                        <input type="text" className="form-control" id="bookQuery" name="bookQuery" placeholder="Search for books" value={this.state.bookQuery} onChange={this.handleInputChange} />
+                                        <input type="text" className="form-control" id="bookQuery" name="q" placeholder="Search for torrents" value={this.state.bookQuery} onChange={this.handleInputChange} />
                                     </div>
                                     <div className="col-2">
                                         <button type="submit" className="btn btn-primary icon">
                                             <i className="material-icons">search</i>
                                             <span>Search</span>
                                         </button>
-                                    </div>
-                                </div><br/>
-                                <div className="row">
-                                    <div className="col-5">
-                                        <input type="text" className="form-control" id="authorQuery" name="authorQuery" placeholder="Enter author name :" value={this.state.authorQuery} onChange={this.handleInputChange} />
-                                    </div>
-                                    <div className="col-2">
-                                        <select className="custom-select" id="semester" name="semester" value={this.state.semester} onChange={this.handleInputChange}>
-                                            <option value="">Choose Semester :</option>
-                                            <option value="0">Not Applicable</option>
-                                            {[1,2,3,4,5,6,7,8].map((i) => <option value={i} key={i}>S{i}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="col-5">
-                                        <select className="custom-select" id="branch" name="branch" value={this.state.branch} onChange={this.handleInputChange}>
-                                            <option value="">Choose Branch :</option>
-                                            <option value="0">Not Applicable</option>
-                                            {branchOptions}
-                                        </select>
                                     </div>
                                 </div>
                             </form>

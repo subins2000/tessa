@@ -7,7 +7,6 @@ import {
 
 import { isLoggedIn, userStore } from './store.js';
 import Home from './components/Home.js';
-import Login from './components/Login.js';
 import NotFound from './components/NotFound.js';
 import Search from './components/Search.js';
 
@@ -19,7 +18,7 @@ function App() {
         <div className="app">
             <Switch>
                 <Route exact path="/" component={Home} />
-                <Route exact path="/login" component={Login} />
+                <Route exact path="/search" component={Search} />
                 <Route component={NotFound} />
             </Switch>
         </div>

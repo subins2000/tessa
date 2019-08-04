@@ -61,7 +61,7 @@ class Home extends Component {
                                 <div className="card-body">
                                     <form className="form-group row" ref={this.bookSearchForm} onSubmit={this.onBookSearchFormSubmit}>
                                         <div className="col-10">
-                                            <input type="text" className="form-control" id="bookQuery" name="bookQuery" placeholder="Search for torrents" />
+                                            <input type="text" className="form-control" id="bookQuery" name="q" placeholder="Search for torrents" />
                                         </div>
                                         <div className="col-2">
                                             <button type="submit" className="btn btn-primary icon">

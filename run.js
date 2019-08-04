@@ -37,6 +37,8 @@ ipfs.on('ready', async () => {
   });
 
   app.get('/add', async function(req, res) {
+    var name = req.query.name;
+    var author = req.query.author;
     var magnet = req.query.magnet;
     var keywords = req.query.keywords;
 
@@ -52,8 +54,10 @@ ipfs.on('ready', async () => {
 
     const hash = await db.put({
       '_id': magnet_hash,
-      'm': 'wmd',
-      'k': keywords.split(' ')
+      'name': name,
+      'm': magnet,
+      'k': keywords.split(' '),
+      'author': author
     });
     res.send(hash);
   });
@@ -67,7 +71,7 @@ ipfs.on('ready', async () => {
     q_keywords = req.query.q.split(' ');
     const results = db.query(function(item) {
       for (var k in q_keywords) {
-        if (item.keywords.indexOf(q_keywords[k]) !== -1) {
+        if (item.k.indexOf(q_keywords[k]) !== -1) {
           return true;
         }
       }
